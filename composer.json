@@ -1,0 +1,45 @@
+{
+  "name": "pipetic/salesforce",
+  "type": "library",
+  "license": "MIT",
+  "description": "Pipetic Bundle for Salesforce",
+  "keywords": [],
+  "homepage": "https://github.com/pipetic/salesforce",
+  "authors": [
+    {
+      "name": "Gabriel Solomon",
+      "email": "hello@gabrielsolomon.ro"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Pipetic\\Salesforce\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Pipetic\\Salesforce\\Tests\\": "tests/src",
+      "Pipetic\\Salesforce\\Tests\\Fixtures\\": "tests/fixtures"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-json": "*",
+    "pipetic/bundle": "dev-main",
+    "stevenmaguire/oauth2-salesforce": "^2.0"
+  },
+  "require-dev": {
+    "bytic/phpqatools": "^1.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "ergebnis/composer-normalize": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "bytic/phpqatools": true,
+      "php-http/discovery": true
+    }
+  }
+}
