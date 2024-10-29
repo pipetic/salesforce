@@ -3,6 +3,7 @@
 namespace Pipetic\Salesforce\Client\Behaviours;
 
 use League\OAuth2\Client\Token\AccessTokenInterface;
+use Pipetic\Salesforce\Abstract\Behaviours\HasAccessToken;
 use Pipetic\Salesforce\Authentication\SalesforceAuthenticator;
 use Pipetic\Salesforce\Authentication\Token\TokenRepositoryDataNode;
 use Pipetic\Salesforce\Config\OauthConfig;
@@ -10,13 +11,24 @@ use Stevenmaguire\OAuth2\Client\Token\AccessToken;
 
 trait HasAuthenticatorTrait
 {
+    use HasAccessToken;
+
     protected SalesforceAuthenticator|null $authenticator = null;
 
     protected ?OauthConfig $authenticatorOptions = null;
 
-    public function getAccessToken(): ?AccessToken
+    protected function discoverAccessToken()
     {
         return $this->getAuthenticator()->getAccessToken();
+    }
+
+    /**
+     * Get the current instance url.
+     * @return string $instanceUrl - The current instance url.
+     */
+    public function getInstanceUrl(): string
+    {
+        return $this->getAccessToken()?->getInstanceUrl() ?? '';
     }
 
     public function isAuthorized(): bool

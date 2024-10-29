@@ -4,6 +4,7 @@ namespace Pipetic\Salesforce\Authentication;
 
 use Exception;
 use League\OAuth2\Client\Token\AccessTokenInterface;
+use Pipetic\Salesforce\Abstract\Behaviours\HasAccessToken;
 use Pipetic\Salesforce\Authentication\Token\TokenRepositoryInterface;
 use Pipetic\Salesforce\Config\OauthConfig;
 use Stevenmaguire\OAuth2\Client\Provider\Salesforce;
@@ -11,6 +12,8 @@ use Stevenmaguire\OAuth2\Client\Token\AccessToken;
 
 class SalesforceAuthenticator
 {
+    use HasAccessToken;
+
     protected $oauth2Provider = null;
 
     protected TokenRepositoryInterface $tokenRepository;
@@ -21,7 +24,7 @@ class SalesforceAuthenticator
         $this->tokenRepository = $tokenRepository;
     }
 
-    public function getAccessToken(): ?AccessToken
+    protected function discoverAccessToken(): ?AccessToken
     {
         $token = $this->tokenRepository->get();
         if (!$token || !($token instanceof AccessToken)) {
@@ -56,7 +59,7 @@ class SalesforceAuthenticator
             'code' => $code
         ]);
         $values = $accessToken->jsonSerialize();
-        $values['expires_in'] = 3*31*24*60*60;
+        $values['expires_in'] = 3 * 31 * 24 * 60 * 60;
         $accessToken = new AccessToken($values);
 //        $introspect = $this->introspect($token['access_token']);
 //        $token['expires'] = $introspect['exp'];

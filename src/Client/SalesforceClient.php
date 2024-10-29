@@ -2,14 +2,35 @@
 
 namespace Pipetic\Salesforce\Client;
 
-class SalesforceClient
-{
-    use Behaviours\HasAuthenticatorTrait;
-    use Behaviours\HasDataNode;
+use ByTIC\RestClient\Client\BaseClient;
 
-    public function __construct()
-    {
-    }
+class SalesforceClient extends BaseClient
+{
+    /**
+     * @var string
+     */
+    const API_VERSION = 'v52.0';
+
+    /**
+     * @var string
+     */
+    const QUERY_ENDPOINT = '/query';
+
+    /**
+     * @var string
+     */
+    const DATA_ENDPOINT = '/services/data';
+
+    /**
+     * @var string
+     */
+    const SOBJECTS_ENDPOINT = '/sobjects';
+
+    use Behaviours\HasAuthenticatorTrait;
+    use Behaviours\HasConfiguration;
+    use Behaviours\HasDataNode;
+    use Behaviours\HasEndpoints;
+
 
 //    /**
 //     * @param string $token

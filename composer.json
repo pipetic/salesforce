@@ -26,6 +26,7 @@
     "php": ">=8.0",
     "ext-json": "*",
     "pipetic/bundle": "dev-main",
+    "bytic/rest-client": "dev-master|dev-develop|^1.0",
     "stevenmaguire/oauth2-salesforce": "^2.0"
   },
   "require-dev": {
