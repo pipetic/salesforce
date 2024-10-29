@@ -2,9 +2,11 @@
 
 namespace Pipetic\Salesforce\Client\Behaviours;
 
+use League\OAuth2\Client\Token\AccessTokenInterface;
 use Pipetic\Salesforce\Authentication\SalesforceAuthenticator;
 use Pipetic\Salesforce\Authentication\Token\TokenRepositoryDataNode;
 use Pipetic\Salesforce\Config\OauthConfig;
+use Stevenmaguire\OAuth2\Client\Token\AccessToken;
 
 trait HasAuthenticatorTrait
 {
@@ -12,8 +14,9 @@ trait HasAuthenticatorTrait
 
     protected ?OauthConfig $authenticatorOptions = null;
 
-    public function __construct()
+    public function getAccessToken(): ?AccessToken
     {
+        return $this->getAuthenticator()->getAccessToken();
     }
 
     public function isAuthorized(): bool
@@ -21,7 +24,7 @@ trait HasAuthenticatorTrait
         return $this->getAuthenticator()->isAuthorized();
     }
 
-    public function authenticate($request = null): ?\League\OAuth2\Client\Token\AccessTokenInterface
+    public function authenticate($request = null): ?AccessTokenInterface
     {
         return $this->getAuthenticator()->authenticate($request);
     }

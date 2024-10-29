@@ -21,13 +21,18 @@ class SalesforceAuthenticator
         $this->tokenRepository = $tokenRepository;
     }
 
-    public function isAuthorized(): bool
+    public function getAccessToken(): ?AccessToken
     {
         $token = $this->tokenRepository->get();
         if (!$token || !($token instanceof AccessToken)) {
-            return false;
+            return null;
         }
+        return $token;
+    }
 
+    public function isAuthorized(): bool
+    {
+        $token = $this->getAccessToken();
         return !$token->hasExpired();
     }
 
@@ -50,6 +55,11 @@ class SalesforceAuthenticator
         $accessToken = $this->oauth2Provider->getAccessToken('authorization_code', [
             'code' => $code
         ]);
+        $values = $accessToken->jsonSerialize();
+        $values['expires_in'] = 3*31*24*60*60;
+        $accessToken = new AccessToken($values);
+//        $introspect = $this->introspect($token['access_token']);
+//        $token['expires'] = $introspect['exp'];
         $this->tokenRepository->save($accessToken);
 
         return $accessToken;

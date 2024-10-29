@@ -29,6 +29,9 @@ class TokenRepositoryDataNode implements TokenRepositoryInterface
         /** @var Metadata $metadata */
         $metadata = $this->node->metadata;
         $accessToken = $metadata->get(self::METADATA_KEY);
+        if (!$accessToken) {
+            return null;
+        }
         $accessToken = new AccessToken($accessToken);
         return $accessToken;
     }
