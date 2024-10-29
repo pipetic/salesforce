@@ -102,4 +102,13 @@ class OauthConfig
         $this->oauth2pkceCode = $oauth2pkceCode;
         return $this;
     }
+
+    public function toArray()
+    {
+        return [
+            self::CLIENT_ID_KEY => $this->getClientId(),
+            self::CLIENT_SECRET_KEY => $this->getClientSecret(),
+            self::REDIRECT_URI_KEY => $this->getRedirectUri(),
+        ];
+    }
 }

@@ -17,7 +17,7 @@ class SalesforceAuthenticator
 
     public function __construct(array|OauthConfig $options, $tokenRepository, $oauth2Provider = null)
     {
-        $this->oauth2Provider = $oauth2Provider ?? $this->initOauth2Provider($options);
+        $this->oauth2Provider = $oauth2Provider ?? $this->generateOauth2Provider($options);
         $this->tokenRepository = $tokenRepository;
     }
 
@@ -68,11 +68,27 @@ class SalesforceAuthenticator
         }
     }
 
-    protected function initOauth2Provider(array $options = [])
+//         Fetch the authorization URL from the provider; this returns the
+    // urlAuthorize option and generates and applies any necessary parameters
+    public function getAuthorizationUrl()
+    {
+        // (e.g. state).
+        $authorizationUrl = $this->oauth2Provider->getAuthorizationUrl();
+        // Get the state generated for you and store it to the session.
+//            $_SESSION['oauth2state'] = $provider->getState();
+
+        // Optional, only required when PKCE is enabled.
+        // Get the PKCE code generated for you and store it to the session.
+//            $_SESSION['oauth2pkceCode'] = $provider->getPkceCode();
+
+        return $authorizationUrl;
+    }
+
+    protected function generateOauth2Provider(array|OauthConfig $options = [])
     {
         $authConfig = OauthConfig::from($options);
 
-        $this->oauth2Provider = new Salesforce([
+        return new Salesforce([
             'clientId' => $authConfig->getClientId(),
             'clientSecret' => $authConfig->getClientSecret(),
             'redirectUri' => $authConfig->getRedirectUri(),

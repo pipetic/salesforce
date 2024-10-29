@@ -4,12 +4,13 @@ namespace Pipetic\Salesforce\Client\Behaviours;
 
 use Pipetic\Salesforce\Authentication\SalesforceAuthenticator;
 use Pipetic\Salesforce\Authentication\Token\TokenRepositoryDataNode;
+use Pipetic\Salesforce\Config\OauthConfig;
 
 trait HasAuthenticatorTrait
 {
     protected SalesforceAuthenticator|null $authenticator = null;
 
-    protected array $authenticatorOptions = [];
+    protected ?OauthConfig $authenticatorOptions = null;
 
     public function __construct()
     {
