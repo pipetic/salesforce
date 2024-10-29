@@ -7,7 +7,7 @@ use Pipetic\Salesforce\Authentication\Token\TokenRepositoryDataNode;
 
 trait HasAuthenticatorTrait
 {
-    protected $authenticator = null;
+    protected SalesforceAuthenticator|null $authenticator = null;
 
     protected array $authenticatorOptions = [];
 
@@ -15,12 +15,17 @@ trait HasAuthenticatorTrait
     {
     }
 
-    public function isAuthorized()
+    public function isAuthorized(): bool
     {
-        return false;
+        return $this->getAuthenticator()->isAuthorized();
     }
 
-    public function getAuthenticator()
+    public function authenticate($request = null): ?\League\OAuth2\Client\Token\AccessTokenInterface
+    {
+        return $this->getAuthenticator()->authenticate($request);
+    }
+
+    public function getAuthenticator(): ?SalesforceAuthenticator
     {
         if ($this->authenticator === null) {
             $this->initAuthenticator();
@@ -45,7 +50,7 @@ trait HasAuthenticatorTrait
         return $this->authenticatorOptions;
     }
 
-    protected function generateAuthenticator()
+    protected function generateAuthenticator(): SalesforceAuthenticator
     {
         $tokenRepository = new TokenRepositoryDataNode($this->getDataNode());
         $options = $this->getAuthenticatorOptions();

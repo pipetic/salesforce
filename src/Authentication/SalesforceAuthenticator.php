@@ -2,8 +2,12 @@
 
 namespace Pipetic\Salesforce\Authentication;
 
+use Exception;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 use Pipetic\Salesforce\Authentication\Token\TokenRepositoryInterface;
 use Pipetic\Salesforce\Config\OauthConfig;
+use Stevenmaguire\OAuth2\Client\Provider\Salesforce;
+use Stevenmaguire\OAuth2\Client\Token\AccessToken;
 
 class SalesforceAuthenticator
 {
@@ -17,9 +21,38 @@ class SalesforceAuthenticator
         $this->tokenRepository = $tokenRepository;
     }
 
-    public function authenticate()
+    public function isAuthorized(): bool
+    {
+        $token = $this->tokenRepository->get();
+        if (!$token || !($token instanceof AccessToken)) {
+            return false;
+        }
+
+        return !$token->hasExpired();
+    }
+
+    public function authenticate($request = null): AccessTokenInterface
     {
         $existingAccessToken = $this->tokenRepository->get();
+        if ($existingAccessToken && !$existingAccessToken->hasExpired()) {
+            return $existingAccessToken;
+        }
+
+        // Optional, only required when PKCE is enabled.
+        // Restore the PKCE code stored in the session.
+//        $provider->setPkceCode($_SESSION['oauth2pkceCode']);
+
+        $code = $request['code'] ?? null;
+        if (!$code) {
+            throw new Exception('Missing code in request');
+        }
+        // Try to get an access token using the authorization code grant.
+        $accessToken = $this->oauth2Provider->getAccessToken('authorization_code', [
+            'code' => $code
+        ]);
+        $this->tokenRepository->save($accessToken);
+
+        return $accessToken;
     }
 
     public function refresh()
@@ -39,7 +72,7 @@ class SalesforceAuthenticator
     {
         $authConfig = OauthConfig::from($options);
 
-        $this->oauth2Provider = new \Stevenmaguire\OAuth2\Client\Provider\Salesforce([
+        $this->oauth2Provider = new Salesforce([
             'clientId' => $authConfig->getClientId(),
             'clientSecret' => $authConfig->getClientSecret(),
             'redirectUri' => $authConfig->getRedirectUri(),

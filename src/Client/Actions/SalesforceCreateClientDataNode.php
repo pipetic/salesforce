@@ -4,7 +4,6 @@ namespace Pipetic\Salesforce\Client\Actions;
 
 use Bytic\Actions\Action;
 use Bytic\Actions\Behaviours\HasSubject\HasSubject;
-use Pipetic\Salesforce\Client\SalesforceClient;
 
 class SalesforceCreateClientDataNode extends SalesforceCreateClientBase
 {
@@ -14,7 +13,7 @@ class SalesforceCreateClientDataNode extends SalesforceCreateClientBase
     {
         $client = parent::handle();
         $client->setDataNode($this->getSubject());
-        $
+
         return $client;
     }
 

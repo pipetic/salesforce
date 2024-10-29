@@ -14,6 +14,8 @@ class OauthConfig
 
     protected $redirectUri = null;
 
+    protected $oauth2pkceCode = null;
+
     public static function fromConfig($config = null)
     {
         if ($config) {
@@ -82,5 +84,22 @@ class OauthConfig
     public function getRedirectUri()
     {
         return $this->redirectUri;
+    }
+
+    /**
+     * @return null
+     */
+    public function getOauth2pkceCode()
+    {
+        return $this->oauth2pkceCode;
+    }
+
+    /**
+     * @param null $oauth2pkceCode
+     */
+    public function setOauth2pkceCode($oauth2pkceCode): self
+    {
+        $this->oauth2pkceCode = $oauth2pkceCode;
+        return $this;
     }
 }
