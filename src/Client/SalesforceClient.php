@@ -3,6 +3,9 @@
 namespace Pipetic\Salesforce\Client;
 
 use ByTIC\RestClient\Client\BaseClient;
+use Pipetic\Salesforce\Abstract\Behaviours\HasDataNode;
+use Pipetic\Salesforce\Config\ClientConfiguration;
+use Psr\Http\Client\ClientInterface;
 
 class SalesforceClient extends BaseClient
 {
@@ -28,8 +31,15 @@ class SalesforceClient extends BaseClient
 
     use Behaviours\HasAuthenticatorTrait;
     use Behaviours\HasConfiguration;
-    use Behaviours\HasDataNode;
+    use HasDataNode;
     use Behaviours\HasEndpoints;
+
+    public function __construct(ClientInterface $httpClient = null, ClientConfiguration $configuration = null)
+    {
+        $this->constructFromConfiguration($configuration);
+        parent::__construct($httpClient, $configuration);
+    }
+
 
 
 //    /**

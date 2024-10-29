@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipetic\Salesforce\Client\Behaviours;
+namespace Pipetic\Salesforce\Abstract\Behaviours;
 
 trait HasDataNode
 {

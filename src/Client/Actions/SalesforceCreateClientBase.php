@@ -3,8 +3,8 @@
 namespace Pipetic\Salesforce\Client\Actions;
 
 use Bytic\Actions\Action;
-use Bytic\Actions\Behaviours\HasSubject\HasSubject;
 use Pipetic\Salesforce\Client\SalesforceClient;
+use Pipetic\Salesforce\Config\ClientConfiguration;
 use Pipetic\Salesforce\Config\OauthConfig;
 
 class SalesforceCreateClientBase extends  Action
@@ -14,14 +14,21 @@ class SalesforceCreateClientBase extends  Action
     public function handle()
     {
         $client = $this->generateClient();
-        $this->initAuthenticator($client);
         return $client;
     }
 
-    public function setOauthConfig($oauthConfig)
+    protected function generateClient(): SalesforceClient
     {
-        $this->oauthConfig = $oauthConfig;
-        return $this;
+        $configuration = $this->generateClientConfiguration();
+        $client = new SalesforceClient(null, $configuration);
+        return $client;
+    }
+
+    protected function generateClientConfiguration(): ClientConfiguration
+    {
+        $configuration = new ClientConfiguration();
+        $configuration->setAuthenticatorOptions($this->getOauthConfig());
+        return $configuration;
     }
 
     public function getOauthConfig()
@@ -32,20 +39,9 @@ class SalesforceCreateClientBase extends  Action
         return $this->oauthConfig;
     }
 
-    protected function generateOauthConfig()
+    protected function generateOauthConfig(): OauthConfig
     {
         return OauthConfig::fromConfig();
-    }
-
-    protected function initAuthenticator(SalesforceClient $client)
-    {
-        $client->setAuthenticatorOptions($this->getOauthConfig());
-    }
-
-    protected function generateClient(): SalesforceClient
-    {
-        $client = new SalesforceClient();
-        return $client;
     }
 }
 

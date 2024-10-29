@@ -36,7 +36,10 @@ class SalesforceAuthenticator
     public function isAuthorized(): bool
     {
         $token = $this->getAccessToken();
-        return !$token->hasExpired();
+        if (!$token) {
+            return false;
+        }
+        return $token->hasExpired() == false;
     }
 
     public function authenticate($request = null): AccessTokenInterface

@@ -5,6 +5,7 @@ namespace Pipetic\Salesforce\Endpoints\Oauth2;
 use ByTIC\RestClient\Endpoints\Traits\DynamicMethod;
 use ByTIC\RestClient\Endpoints\Traits\HasClient;
 use ByTIC\RestClient\Utility\Traits\HasUri;
+use League\OAuth2\Client\Token\AccessToken;
 use Pipetic\Salesforce\Endpoints\Base\AbstractEndpoint;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -19,9 +20,29 @@ class IntrospectEndpoint extends AbstractEndpoint
     use HasClient;
     use DynamicMethod;
 
+    public function inspect(AccessToken $accessToken)
+    {
+        $this->bodyData = [
+            "client_id" => $this->getAuthenticatorOptions()->getClientId(),
+            "client_secret" => $this->getAuthenticatorOptions()->getClientSecret(),
+            "token" => $accessToken->getToken(),
+            "token_type_hint" => "access_token"
+        ];
+        $this->setMethod('POST');
+
+        return $this->execute();
+    }
+
     protected function transformResponseBody(string $body, int $status, SerializerInterface $serializer, string $contentType = null)
     {
         // TODO: Implement transformResponseBody() method.
+    }
+
+    protected function generateBodyHeaders(): array
+    {
+        $headers = parent::generateBodyHeaders();
+        $headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        return $headers;
     }
 }
 

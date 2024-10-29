@@ -6,15 +6,16 @@ trait HasConfiguration
 {
     protected $apiVersion;
 
-    /**
-     * @inheritDoc
-     */
-    protected function discoverConfiguration()
+    protected function constructFromConfiguration($configuration): void
     {
-        $this->apiVersion = self::API_VERSION;
+        $this->setAuthenticatorOptions($configuration->getAuthenticatorOptions());
+        $this->setDataNode($configuration->getDataNode());
+    }
 
-        $configuration = parent::discoverConfiguration();
-//        $configuration->addFormatSupport('json');
+    protected function initConfiguration($configuration = null): void
+    {
+        $configuration = $configuration ?: $this->discoverConfiguration();
+        $this->apiVersion = self::API_VERSION;
 
         $configuration->setUri($this->buildQueryUrl());
 
@@ -23,7 +24,8 @@ trait HasConfiguration
         ];
 
         $configuration->headers()->add($headers);
-        return $configuration;
+
+        parent::initConfiguration($configuration);
     }
 
     /**

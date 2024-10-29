@@ -7,7 +7,7 @@ use Pipetic\Salesforce\Endpoints\Oauth2\IntrospectEndpoint;
 
 trait HasEndpoints
 {
-    public function oauth2Introspect(): \ByTIC\RestClient\Endpoints\AbstractEndpoint
+    public function oauth2Introspect(): IntrospectEndpoint
     {
         return $this->getEndpointWithToken(IntrospectEndpoint::class);
     }
@@ -17,6 +17,7 @@ trait HasEndpoints
         /** @var AbstractEndpoint $endpoint */
         $endpoint = $this->getEndpoint($class);
         $endpoint->setAccessToken($this->getAccessToken());
+        $endpoint->setAuthenticatorOptions($this->getAuthenticatorOptions());
         return $endpoint;
     }
 }

@@ -4,6 +4,7 @@ namespace Pipetic\Salesforce\Client\Behaviours;
 
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Pipetic\Salesforce\Abstract\Behaviours\HasAccessToken;
+use Pipetic\Salesforce\Abstract\Behaviours\HasOauthConfig;
 use Pipetic\Salesforce\Authentication\SalesforceAuthenticator;
 use Pipetic\Salesforce\Authentication\Token\TokenRepositoryDataNode;
 use Pipetic\Salesforce\Config\OauthConfig;
@@ -12,10 +13,9 @@ use Stevenmaguire\OAuth2\Client\Token\AccessToken;
 trait HasAuthenticatorTrait
 {
     use HasAccessToken;
+    use HasOauthConfig;
 
     protected SalesforceAuthenticator|null $authenticator = null;
-
-    protected ?OauthConfig $authenticatorOptions = null;
 
     protected function discoverAccessToken()
     {
@@ -49,21 +49,9 @@ trait HasAuthenticatorTrait
         return $this->authenticator;
     }
 
-    public function setAuthenticatorOptions($options): static
-    {
-        $this->authenticatorOptions = $options;
-        return $this;
-    }
-
     protected function initAuthenticator()
     {
         $this->authenticator = $this->generateAuthenticator();
-    }
-
-
-    protected function getAuthenticatorOptions()
-    {
-        return $this->authenticatorOptions;
     }
 
     protected function generateAuthenticator(): SalesforceAuthenticator
