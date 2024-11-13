@@ -3,7 +3,7 @@
 namespace Pipetic\Salesforce\Client\Behaviours;
 
 use Pipetic\Salesforce\Endpoints\Base\AbstractEndpoint;
-use Pipetic\Salesforce\Endpoints\Oauth2\IntrospectEndpoint;
+use Pipetic\Salesforce\Endpoints\Oauth2\Introspect\IntrospectEndpoint;
 
 trait HasEndpoints
 {

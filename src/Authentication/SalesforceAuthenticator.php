@@ -64,8 +64,6 @@ class SalesforceAuthenticator
         $values = $accessToken->jsonSerialize();
         $values['expires_in'] = 3 * 31 * 24 * 60 * 60;
         $accessToken = new AccessToken($values);
-//        $introspect = $this->introspect($token['access_token']);
-//        $token['expires'] = $introspect['exp'];
         $this->tokenRepository->save($accessToken);
 
         return $accessToken;

@@ -1,0 +1,11 @@
+{
+  "active": true,
+  "scope": "id api web full chatter_api visualforce refresh_token openid custom_permissions wave_api eclair_api pardot_api lightning content cdp_ingest_api cdp_profile_api cdp_query_api chatbot_api cdp_segment_api cdp_identityresolution_api forgot_password cdp_calculated_insight_api user_registration_api sfap_api interaction_api cdp_api einstein_gpt_api pwdless_login_api",
+  "client_id": "xxxxxxxxxxxxxxx",
+  "username": "gabriel.solomon@onekind.ro",
+  "sub": "https://login.salesforce.com/id/00D/005",
+  "token_type": "access_token",
+  "exp": 1731520276,
+  "iat": 1731513076,
+  "nbf": 1731513076
+}

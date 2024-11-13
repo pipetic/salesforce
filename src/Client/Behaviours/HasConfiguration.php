@@ -34,6 +34,7 @@ trait HasConfiguration
     private function buildQueryUrl(): string
     {
         $baseUri = $this->getInstanceUrl();
+        return $baseUri;
         return sprintf(
             '%s%s/%s%s',
             $baseUri,

@@ -7,8 +7,6 @@ use Pipetic\Salesforce\Abstract\Behaviours\HasAccessToken;
 use Pipetic\Salesforce\Abstract\Behaviours\HasOauthConfig;
 use Pipetic\Salesforce\Authentication\SalesforceAuthenticator;
 use Pipetic\Salesforce\Authentication\Token\TokenRepositoryDataNode;
-use Pipetic\Salesforce\Config\OauthConfig;
-use Stevenmaguire\OAuth2\Client\Token\AccessToken;
 
 trait HasAuthenticatorTrait
 {
@@ -38,7 +36,9 @@ trait HasAuthenticatorTrait
 
     public function authenticate($request = null): ?AccessTokenInterface
     {
-        return $this->getAuthenticator()->authenticate($request);
+        $accessToken = $this->getAuthenticator()->authenticate($request);
+//        $response = $this->oauth2Introspect()->inspect($accessToken);
+        return $accessToken;
     }
 
     public function getAuthenticator(): ?SalesforceAuthenticator

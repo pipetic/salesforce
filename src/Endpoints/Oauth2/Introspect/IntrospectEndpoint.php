@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipetic\Salesforce\Endpoints\Oauth2;
+namespace Pipetic\Salesforce\Endpoints\Oauth2\Introspect;
 
 use ByTIC\RestClient\Endpoints\Traits\DynamicMethod;
 use ByTIC\RestClient\Endpoints\Traits\HasClient;
@@ -35,7 +35,8 @@ class IntrospectEndpoint extends AbstractEndpoint
 
     protected function transformResponseBody(string $body, int $status, SerializerInterface $serializer, string $contentType = null)
     {
-        // TODO: Implement transformResponseBody() method.
+        $data = json_decode($body, true);
+        return IntrospectResponse::fromArray($data);
     }
 
     protected function generateBodyHeaders(): array
