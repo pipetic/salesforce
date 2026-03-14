@@ -4,122 +4,97 @@ namespace Pipetic\Salesforce\Endpoints\Oauth2\Introspect;
 
 class IntrospectResponse
 {
-    protected $active = null;
+    protected ?bool $active = null;
 
-    protected $scope = null;
+    protected ?string $scope = null;
 
-    protected $client_id = null;
+    protected ?string $client_id = null;
 
-    protected $username = null;
+    protected ?string $username = null;
 
-    protected $token_type = null;
+    protected ?string $token_type = null;
 
     /**
-     * @var OPTIONAL.  Integer timestamp, measured in the number of seconds
-     * since January 1 1970 UTC, indicating when this token will expire,
-     * as defined in JWT
+     * Integer timestamp, measured in the number of seconds since January 1 1970 UTC,
+     * indicating when this token will expire, as defined in JWT.
      */
-    protected $exp = null;
+    protected ?int $exp = null;
 
-    protected $iat = null;
+    protected ?int $iat = null;
 
-    protected $nbf = null;
+    protected ?int $nbf = null;
 
-    protected $sub = null;
+    protected ?string $sub = null;
 
-    public static function from($data)
+    public static function from(mixed $data): static
     {
-       if (is_array($data)) {
-           return static::fromArray($data);
-       }
-       throw new \Exception('Invalid data type');
+        if (is_array($data)) {
+            return static::fromArray($data);
+        }
+        throw new \InvalidArgumentException('Invalid data type: expected array');
     }
 
-    public static function fromArray($data)
+    public static function fromArray(array $data): static
     {
         $response = new static();
         $response->populate($data);
         return $response;
     }
 
-    public function populate($data)
+    public function populate(array $data): void
     {
         $this->active = $data['active'] ?? null;
         $this->scope = $data['scope'] ?? null;
         $this->client_id = $data['client_id'] ?? null;
         $this->username = $data['username'] ?? null;
         $this->token_type = $data['token_type'] ?? null;
-        $this->exp = $data['exp'] ?? null;
-        $this->iat = $data['iat'] ?? null;
-        $this->nbf = $data['nbf'] ?? null;
+        $this->exp = isset($data['exp']) ? (int) $data['exp'] : null;
+        $this->iat = isset($data['iat']) ? (int) $data['iat'] : null;
+        $this->nbf = isset($data['nbf']) ? (int) $data['nbf'] : null;
         $this->sub = $data['sub'] ?? null;
     }
 
-    /**
-     * @return null
-     */
-    public function getActive()
+    public function getActive(): ?bool
     {
         return $this->active;
     }
 
-    /**
-     * @return null
-     */
-    public function getScope()
+    public function getScope(): ?string
     {
         return $this->scope;
     }
 
-    /**
-     * @return null
-     */
-    public function getClientId()
+    public function getClientId(): ?string
     {
         return $this->client_id;
     }
 
-    /**
-     * @return null
-     */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    /**
-     * @return null
-     */
-    public function getTokenType()
+    public function getTokenType(): ?string
     {
         return $this->token_type;
     }
 
-    public function getExp(): ?OPTIONAL
+    public function getExp(): ?int
     {
         return $this->exp;
     }
 
-    /**
-     * @return null
-     */
-    public function getIat()
+    public function getIat(): ?int
     {
         return $this->iat;
     }
 
-    /**
-     * @return null
-     */
-    public function getNbf()
+    public function getNbf(): ?int
     {
         return $this->nbf;
     }
 
-    /**
-     * @return null
-     */
-    public function getSub()
+    public function getSub(): ?string
     {
         return $this->sub;
     }

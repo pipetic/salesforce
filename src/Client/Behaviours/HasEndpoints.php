@@ -4,6 +4,8 @@ namespace Pipetic\Salesforce\Client\Behaviours;
 
 use Pipetic\Salesforce\Endpoints\Base\AbstractEndpoint;
 use Pipetic\Salesforce\Endpoints\Oauth2\Introspect\IntrospectEndpoint;
+use Pipetic\Salesforce\Endpoints\SObjects\SObjectsEndpoint;
+use Pipetic\Salesforce\Endpoints\SObjects\SObjectsQueryEndpoint;
 
 trait HasEndpoints
 {
@@ -12,7 +14,17 @@ trait HasEndpoints
         return $this->getEndpointWithToken(IntrospectEndpoint::class);
     }
 
-    protected function getEndpointWithToken($class): AbstractEndpoint
+    public function sobjects(): SObjectsEndpoint
+    {
+        return $this->getEndpointWithToken(SObjectsEndpoint::class);
+    }
+
+    public function query(): SObjectsQueryEndpoint
+    {
+        return $this->getEndpointWithToken(SObjectsQueryEndpoint::class);
+    }
+
+    protected function getEndpointWithToken(string $class): AbstractEndpoint
     {
         /** @var AbstractEndpoint $endpoint */
         $endpoint = $this->getEndpoint($class);

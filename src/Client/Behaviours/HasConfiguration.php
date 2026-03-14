@@ -33,14 +33,6 @@ trait HasConfiguration
      */
     private function buildQueryUrl(): string
     {
-        $baseUri = $this->getInstanceUrl();
-        return $baseUri;
-        return sprintf(
-            '%s%s/%s%s',
-            $baseUri,
-            self::DATA_ENDPOINT,
-            $this->apiVersion,
-            self::QUERY_ENDPOINT
-        );
+        return $this->getInstanceUrl();
     }
 }
