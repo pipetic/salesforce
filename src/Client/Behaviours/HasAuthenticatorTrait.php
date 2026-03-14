@@ -13,16 +13,15 @@ trait HasAuthenticatorTrait
     use HasAccessToken;
     use HasOauthConfig;
 
-    protected SalesforceAuthenticator|null $authenticator = null;
+    protected ?SalesforceAuthenticator $authenticator = null;
 
-    protected function discoverAccessToken()
+    protected function discoverAccessToken(): mixed
     {
         return $this->getAuthenticator()->getAccessToken();
     }
 
     /**
      * Get the current instance url.
-     * @return string $instanceUrl - The current instance url.
      */
     public function getInstanceUrl(): string
     {
@@ -36,9 +35,7 @@ trait HasAuthenticatorTrait
 
     public function authenticate($request = null): ?AccessTokenInterface
     {
-        $accessToken = $this->getAuthenticator()->authenticate($request);
-//        $response = $this->oauth2Introspect()->inspect($accessToken);
-        return $accessToken;
+        return $this->getAuthenticator()->authenticate($request);
     }
 
     public function getAuthenticator(): ?SalesforceAuthenticator
@@ -49,7 +46,7 @@ trait HasAuthenticatorTrait
         return $this->authenticator;
     }
 
-    protected function initAuthenticator()
+    protected function initAuthenticator(): void
     {
         $this->authenticator = $this->generateAuthenticator();
     }

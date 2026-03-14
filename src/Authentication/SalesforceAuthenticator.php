@@ -18,7 +18,7 @@ class SalesforceAuthenticator
 
     protected TokenRepositoryInterface $tokenRepository;
 
-    public function __construct(array|OauthConfig $options, $tokenRepository, $oauth2Provider = null)
+    public function __construct(array|OauthConfig $options, TokenRepositoryInterface $tokenRepository, $oauth2Provider = null)
     {
         $this->oauth2Provider = $oauth2Provider ?? $this->generateOauth2Provider($options);
         $this->tokenRepository = $tokenRepository;
@@ -49,10 +49,6 @@ class SalesforceAuthenticator
             return $existingAccessToken;
         }
 
-        // Optional, only required when PKCE is enabled.
-        // Restore the PKCE code stored in the session.
-//        $provider->setPkceCode($_SESSION['oauth2pkceCode']);
-
         $code = $request['code'] ?? null;
         if (!$code) {
             throw new Exception('Missing code in request');
@@ -65,40 +61,37 @@ class SalesforceAuthenticator
         $values['expires_in'] = 3 * 31 * 24 * 60 * 60;
         $accessToken = new AccessToken($values);
         $this->tokenRepository->save($accessToken);
+        $this->setAccessToken($accessToken);
 
         return $accessToken;
     }
 
-    public function refresh()
+    public function refresh(): AccessTokenInterface
     {
         $existingAccessToken = $this->tokenRepository->get();
+
+        if (!$existingAccessToken) {
+            throw new Exception('No existing access token to refresh');
+        }
 
         if ($existingAccessToken->hasExpired()) {
             $newAccessToken = $this->oauth2Provider->getAccessToken('refresh_token', [
                 'refresh_token' => $existingAccessToken->getRefreshToken()
             ]);
-
-            // Purge old access token and store new access token to your data store.
+            $this->tokenRepository->save($newAccessToken);
+            $this->setAccessToken($newAccessToken);
+            return $newAccessToken;
         }
+
+        return $existingAccessToken;
     }
 
-//         Fetch the authorization URL from the provider; this returns the
-    // urlAuthorize option and generates and applies any necessary parameters
-    public function getAuthorizationUrl()
+    public function getAuthorizationUrl(): string
     {
-        // (e.g. state).
-        $authorizationUrl = $this->oauth2Provider->getAuthorizationUrl();
-        // Get the state generated for you and store it to the session.
-//            $_SESSION['oauth2state'] = $provider->getState();
-
-        // Optional, only required when PKCE is enabled.
-        // Get the PKCE code generated for you and store it to the session.
-//            $_SESSION['oauth2pkceCode'] = $provider->getPkceCode();
-
-        return $authorizationUrl;
+        return $this->oauth2Provider->getAuthorizationUrl();
     }
 
-    protected function generateOauth2Provider(array|OauthConfig $options = [])
+    protected function generateOauth2Provider(array|OauthConfig $options = []): Salesforce
     {
         $authConfig = OauthConfig::from($options);
 
@@ -106,8 +99,6 @@ class SalesforceAuthenticator
             'clientId' => $authConfig->getClientId(),
             'clientSecret' => $authConfig->getClientSecret(),
             'redirectUri' => $authConfig->getRedirectUri(),
-            // optional, defaults to https://login.salesforce.com
-//            'domain' => '{custom-salesforce-domain}'
         ]);
     }
 }

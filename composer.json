@@ -2,8 +2,16 @@
   "name": "pipetic/salesforce",
   "type": "library",
   "license": "MIT",
-  "description": "Pipetic Bundle for Salesforce",
-  "keywords": [],
+  "description": "Salesforce adapter for the Pipetic platform. Provides OAuth 2.0 authentication and ETL data sync for multi-tenant SaaS applications.",
+  "keywords": [
+    "salesforce",
+    "oauth2",
+    "etl",
+    "crm",
+    "pipetic",
+    "integration",
+    "adapter"
+  ],
   "homepage": "https://github.com/pipetic/salesforce",
   "authors": [
     {
@@ -32,6 +40,9 @@
   "require-dev": {
     "bytic/phpqatools": "^1.0"
   },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
@@ -44,3 +55,4 @@
     }
   }
 }
+
